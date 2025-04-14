@@ -1,0 +1,6 @@
+[submodule "libxml2"]
+	path = libxml2
+	url = git@github.com:hrishi-06/libxml2.git
+[submodule "oss-fuzz"]
+	path = oss-fuzz
+	url = git@github.com:hrishi-06/oss-fuzz.git
