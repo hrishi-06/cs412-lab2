@@ -1,0 +1,13 @@
+diff --git a/fuzz/oss-fuzz-build.sh b/fuzz/oss-fuzz-build.sh
+index 07beeb10..43350f0a 100755
+--- a/fuzz/oss-fuzz-build.sh
++++ b/fuzz/oss-fuzz-build.sh
+@@ -53,7 +53,7 @@ do
+         $LIB_FUZZING_ENGINE \
+         ../.libs/libxml2.a -Wl,-Bstatic -lz -llzma -Wl,-Bdynamic
+ 
+-    if [ $fuzzer != api ]; then
++    if [ $fuzzer != api ] && [ $fuzzer != xml ]; then
+         [ -e seed/$fuzzer ] || make seed/$fuzzer.stamp
+         zip -j $OUT/${fuzzer}_seed_corpus.zip seed/$fuzzer/*
+     fi
