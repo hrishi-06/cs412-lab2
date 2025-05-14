@@ -18,4 +18,4 @@ rm -rf build/out/libxml2
 python3 infra/helper.py build_fuzzers --sanitizer coverage libxml2
 
 # get the coverage
-python3 infra/helper.py coverage libxml2 --corpus-dir build/out/corpus/ --fuzz-target xml
+python3 infra/helper.py coverage libxml2 --corpus-dir build/out/corpus/ --fuzz-target lint
