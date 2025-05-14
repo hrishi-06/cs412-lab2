@@ -10,7 +10,7 @@ python3 infra/helper.py build_fuzzers libxml2
 mkdir build/out/corpus
 
 # run the fuzzer
-timeout -k 1s 4h python3 infra/helper.py run_fuzzer libxml2 xml --corpus-dir build/out/corpus
+timeout -k 1s 4h python3 infra/helper.py run_fuzzer libxml2 lint --corpus-dir build/out/corpus
 
 rm -rf build/out/libxml2
 
@@ -18,4 +18,4 @@ rm -rf build/out/libxml2
 python3 infra/helper.py build_fuzzers --sanitizer coverage libxml2
 
 # get the coverage
-python3 infra/helper.py coverage libxml2 --corpus-dir build/out/corpus/ --fuzz-target xml
+python3 infra/helper.py coverage libxml2 --corpus-dir build/out/corpus/ --fuzz-target lint
