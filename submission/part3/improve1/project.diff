@@ -1,0 +1,59 @@
+diff --git a/fuzz/lint.c b/fuzz/lint.c
+index 82de44b2..724738d8 100644
+--- a/fuzz/lint.c
++++ b/fuzz/lint.c
+@@ -130,13 +130,15 @@ LLVMFuzzerTestOneInput(const char *data, size_t size) {
+     size_t ssize, docSize, i;
+     unsigned uval;
+     int ival;
++    int schemafd;
++    const char schemaPath[] = "/tmp/schemaXXXXXX";
+ 
+     if (xmlMemUsed() != 0) {
+         fprintf(stderr, "Undetected leak in previous iteration\n");
+         abort();
+     }
+ 
+-    vars.argv = malloc((numSwitches + 5 + 6 * 2) * sizeof(vars.argv[0]));
++    vars.argv = malloc((numSwitches + 5 + 7 * 2) * sizeof(vars.argv[0]));
+     vars.argi = 0;
+     pushArg("xmllint"),
+     pushArg("--nocatalogs");
+@@ -215,6 +217,17 @@ LLVMFuzzerTestOneInput(const char *data, size_t size) {
+         pushArg(sval);
+     }
+ 
++    sval = xmlFuzzReadString(&ssize);
++    if (ssize > 0) {
++        schemafd = mkstemp(schemaPath);
++        if (schemafd >= 0) {
++            write(schemafd, sval, ssize);
++            close(schemafd);
++            pushArg("--schema");
++            pushArg(schemaPath);
++        }
++    }
++
+     xmlFuzzReadEntities();
+     docBuffer = xmlFuzzMainEntity(&docSize);
+     docUrl = xmlFuzzMainUrl();
+@@ -236,6 +249,7 @@ LLVMFuzzerTestOneInput(const char *data, size_t size) {
+ exit:
+     xmlFuzzDataCleanup();
+     free(vars.argv);
++    unlink(schemaPath);
+     return(0);
+ }
+ 
+diff --git a/xmllint.c b/xmllint.c
+index c737b1cd..2e6ca0d7 100644
+--- a/xmllint.c
++++ b/xmllint.c
+@@ -3416,6 +3416,7 @@ xmllintMain(int argc, const char **argv, FILE *errStream,
+ 	    fprintf(errStream, "WXS schema %s failed to compile\n",
+                     lint->schema);
+             lint->progresult = XMLLINT_ERR_SCHEMACOMP;
++            xmlSchemaFreeParserCtxt(ctxt);
+             goto error;
+ 	}
+ 	xmlSchemaFreeParserCtxt(ctxt);
