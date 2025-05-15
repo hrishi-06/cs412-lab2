@@ -10,7 +10,7 @@ python3 infra/helper.py build_fuzzers libxml2
 mkdir build/out/corpus
 
 # run the fuzzer
-timeout -k 1s 4h python3 infra/helper.py run_fuzzer libxml2 lint --corpus-dir build/out/corpus
+timeout -k 1s 4h python3 infra/helper.py run_fuzzer libxml2 lint -- -rss_limit_mb=8092
 
 rm -rf build/out/libxml2
 
